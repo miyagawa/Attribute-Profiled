@@ -4,9 +4,10 @@ use 5.006;
 use strict;
 use warnings;
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 use Attribute::Handlers;
+use Hook::LexWrap;
 
 our $_Profiler;
 
@@ -15,15 +16,16 @@ sub UNIVERSAL::Profiled : ATTR(CODE) {
     my $meth = *{$symbol}{NAME};
     no warnings 'redefine';
 
-    *{$symbol} = sub {
-	unless ($_Profiler) {
-	    $_Profiler = Benchmark::Timer::ReportOnDestroy->new;
-	}
-	$_Profiler->start("$package\::$meth");
-	my @ret = wantarray ? $referent->(@_) : scalar $referent->(@_);
-	$_Profiler->stop("$package\::$meth");
-	return wantarray ? @ret : $ret[0];
-    };
+    wrap $symbol,
+	pre  => sub {
+	    unless ($_Profiler) {
+		$_Profiler = Benchmark::Timer::ReportOnDestroy->new;
+	    }
+	    $_Profiler->start("$package\::$meth");
+	},
+	post => sub {
+	    $_Profiler->stop("$package\::$meth");
+	};
 }
 
 package Benchmark::Timer::ReportOnDestroy;
@@ -71,10 +73,6 @@ Options where to print profiling report.
 Allows public way to get reports in any timing other than the end of
 execution. Currently you can do it by explicitly calling report() on
 C<$Attribute::Profiled::_Profiler>.
-
-=item *
-
-Currently it's not caller sensitive (doesn't use goto).
 
 =back
 

@@ -8,6 +8,7 @@ WriteMakefile(
 	Attribute::Handlers => 0.70,
 	Test::More          => 0,
 	Benchmark::Timer    => 0.5,
+	Hook::LexWrap       => 0.01,
     }, # e.g., Module::Name => 1.1
     'AUTHOR'		=> 'Tatsuhiko Miyagawa <miyagawa@bulknews.net>',
 );
