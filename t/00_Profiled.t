@@ -28,7 +28,7 @@ sub new {
 
 sub method : Profiled {
     my $self = shift;
-    return 1;
+    return 'foo';
 }
 
 sub method2 : Profiled {
@@ -41,7 +41,7 @@ package main;
 my $catch = tie *STDERR, 'Catch';
 
 my $foo = SomeClass->new;
-is($foo->method, 1, 'retvalue preserved');
+is($foo->method, 'foo', 'retvalue preserved');
 
 $foo->method for (1..10);
 

@@ -1,5 +1,9 @@
 Revision history for Perl extension Attribute::Profiled.
 
+0.02  Tue Sep 18 08:39:12 JST 2001
+	- fixed return value bug, added test suite
+	- docs update
+
 0.01  Sun Sep  2 02:23:01 2001
 	- original version; created by h2xs 1.21 with options
 		-AXn Attribute::Profiled

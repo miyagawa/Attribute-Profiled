@@ -4,7 +4,7 @@ use 5.006;
 use strict;
 use warnings;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 use Attribute::Handlers;
 
@@ -22,7 +22,7 @@ sub UNIVERSAL::Profiled : ATTR(CODE) {
 	$_Profiler->start("$package\::$meth");
 	my @ret = wantarray ? $referent->(@_) : scalar $referent->(@_);
 	$_Profiler->stop("$package\::$meth");
-	return @ret;
+	return wantarray ? @ret : $ret[0];
     };
 }
 
@@ -71,6 +71,10 @@ Options where to print profiling report.
 Allows public way to get reports in any timing other than the end of
 execution. Currently you can do it by explicitly calling report() on
 C<$Attribute::Profiled::_Profiler>.
+
+=item *
+
+Currently it's not caller sensitive (doesn't use goto).
 
 =back
 
